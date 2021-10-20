@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#000000" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+            crossorigin="anonymous"
+        />
+    </head>
+    <body style="background: #fff">
+        <div class="wrapper">
+            <div id="form__wrapper">
+                <div name="calcForm" class="calculator__form">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="productPrice">Цена товара</label>
+                            <input type="number" placeholder="5000" class="form-control" id="productPrice" />
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="avance">Аванс (предоплата)</label>
+                            <input type="number" placeholder="1000" class="form-control" id="avance" />
+                        </div>
+                        <p>Вы можете внести часть суммы товара в поле аванса. Тогда сумма за кредит будет меньше.</p>
+                        <div class="form-group">
+                            <p class=" mb-2">Срок кредита: <span class="range__label">1 месяц</span></p>
+                            <input type="range" min="1" max="12" value="1" class="form-range" id="creditTerm" />
+                        </div>
+                        <div>
+                            <p>Процентная ставка в день: <span id="percentRate">0.5%</span></p>
+                        </div>
+                    </div>
+                    <div class="mt-3 d-flex justify-content-center">
+                        <button type="button" class="btn calculate-btn" onClick="handleChange()">Рассчитать</button>
+                    </div>
+                    <div style="display: none" id="hider">
+                        <h1  class="mt-4 mb-3">Результат</h1>
+                        <div class="form-group"></div>
+                        <label for="inputPrice">Сумма кредита</label>
+                        <input type="number" class="form-control mb-3" id="result_summa_kredita" disabled style="border: none;" />
+                        <label class="form-label">График платежей</label>
+                        <div style="overflow-x: auto">
+                            <table class="calc__table">
+                                <thead>
+                                    <th>№ Период</th>
+                                    <th>Дата</th>
+                                    <th>Дни</th>
+                                    <th>Сумма</th>
+                                    <th>Тело</th>
+                                    <th>Проценты</th>
+                                </thead>
+                                <tbody id="table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- JavaScript -->
+        <script type="text/javascript">
+            const daysInMonth = (month, year) => new Date(year, month, 0).getDate();
+
+            const getTable = (num, month, monthly_pay) => {
+                const tableBody = document.getElementById("table-body");
+                const totalPrice = num;
+                const percent = 0.5
+
+                const nowDate = new Date();
+                const datesOfPayment = [];
+                const diff = [];
+                const body = [];
+                const percentAmount = [];
+                let last = new Date(nowDate);
+                for (let i = 0; i < month; i++) {
+                    datesOfPayment.push(new Date(last));
+                    datesOfPayment[i].setDate(nowDate.getDate());
+                    datesOfPayment[i].setMonth(datesOfPayment[i].getMonth() + 1);
+                    diff.push(daysInMonth(datesOfPayment[i].getMonth(), datesOfPayment[i].getFullYear()));
+                    body.push(num);
+                    num -= monthly_pay;
+                    percentAmount.push((body[body.length - 1] * (diff[diff.length - 1] * percent)) / 100);
+                    last = new Date(datesOfPayment[i]);
+                }
+
+                tableBody.innerHTML = "";
+
+                for (let i = 0; i < month; i++) {
+                    const tableRow = document.createElement("tr");
+                    let listItem;
+                    listItem = document.createElement("td");
+                    listItem.classList.add("listItem");
+                    listItem.innerText = i + 1;
+                    tableRow.appendChild(listItem);
+
+                    listItem = document.createElement("td");
+                    listItem.classList.add("listItem");
+                    listItem.innerText = datesOfPayment[i].toLocaleDateString("en-UK").replace(/\//g, ".");
+                    tableRow.appendChild(listItem);
+
+                    listItem = document.createElement("td");
+                    listItem.classList.add("listItem");
+                    listItem.innerText = diff[i];
+                    tableRow.appendChild(listItem);
+
+                    listItem = document.createElement("td");
+                    listItem.classList.add("listItem");
+                    listItem.innerText = Math.round(monthly_pay + percentAmount[i]);
+                    tableRow.appendChild(listItem);
+
+                    listItem = document.createElement("td");
+                    listItem.classList.add("listItem");
+                    listItem.innerText = monthly_pay;
+                    tableRow.appendChild(listItem);
+
+                    listItem = document.createElement("td");
+                    listItem.classList.add("listItem");
+                    listItem.innerText = Math.round(percentAmount[i]);
+                    tableRow.appendChild(listItem);
+
+                    tableBody.appendChild(tableRow);
+                }
+                const reducer = (previousValue, currentValue) => previousValue + currentValue;
+
+                let tableRow = document.createElement("tr");
+                listItem = document.createElement("td");
+                listItem.classList.add("listItem");
+                listItem.innerText = "Всего";
+
+                tableRow.appendChild(listItem);
+                listItem = document.createElement("td");
+                listItem.classList.add("listItem");
+                listItem.innerText = "";
+
+                tableRow.appendChild(listItem);
+
+                listItem = document.createElement("td");
+
+                listItem.classList.add("listItem");
+                listItem.innerText = diff.reduce(reducer);
+                tableRow.appendChild(listItem);
+
+                listItem = document.createElement("td");
+                listItem.classList.add("listItem");
+                listItem.innerText = Math.round(totalPrice + percentAmount.reduce(reducer));
+                tableRow.appendChild(listItem);
+
+                listItem = document.createElement("td");
+                listItem.classList.add("listItem");
+                listItem.innerText = Math.round(totalPrice);
+                tableRow.appendChild(listItem);
+
+                listItem = document.createElement("td");
+                listItem.classList.add("listItem");
+                listItem.innerText = Math.round(percentAmount.reduce(reducer));
+                tableRow.appendChild(listItem);
+
+                tableBody.appendChild(tableRow);
+            };
+            const handleChange = () => {
+                const productPriceInput = document.getElementById("productPrice");
+                const avanceInput = document.getElementById("avance");
+
+                const productPrice = +productPriceInput.value;
+                const avance = +avanceInput.value;
+                const creditTerm = +document.getElementById("creditTerm").value;
+
+                const valitateInput = (input) => {
+                    input.classList.add("is-invalid");
+                    input.onfocus = () => input.classList.remove("is-invalid");
+                };
+                if (!productPrice) valitateInput(productPriceInput);
+                if (avance > productPrice) valitateInput(avanceInput);
+
+                if (productPrice && avance < productPrice) {
+                    document.getElementById("hider").style.display = "block";
+                    const summa_kreditovaniya = productPrice - avance;
+                    const creditSumInput = document.getElementById("result_summa_kredita");
+                    creditSumInput.value = summa_kreditovaniya;
+                    getTable(
+                        summa_kreditovaniya,
+                        creditTerm,
+                        Math.round(creditSumInput.value / creditTerm)
+                    );
+                }
+            };
+            const rangeHandler = () => {
+                const range = document.getElementById("creditTerm");
+                const label = document.querySelector(".range__label");
+                const getMonthText = (val) => val < 2 ? "месяц" : val > 1 && val < 5 ? "месяцa" : "месяцев"
+
+                range.oninput = () => label.innerHTML = `${range.value} ${getMonthText(range.value)}`;
+            };
+            rangeHandler();
+        </script>
+        <!-- CSS Styles -->
+        <style>
+            html {
+                font-size: 16px;
+            }
+            body {
+                color: #1d1c7e;
+            }
+            button.calculate-btn {
+                background-color: #f22b0c;
+                border: 1px solid #f22b0c;
+                color: #fff;
+                box-shadow: none;
+            }
+            button.calculate-btn:focus {
+                background-color: #ff2e0e;
+                border: 1px solid #ff2e0e;
+                box-shadow: none;
+            }
+            button.calculate-btn:visited {
+                background-color: #ff2e0e;
+                border: 1px solid #ff2e0e;
+                box-shadow: none;
+            }
+            button.calculate-btn:hover {
+                background-color: #ff2e0e;
+                border: 1px solid #ff2e0e;
+                box-shadow: none;
+                color: #fff;
+            }
+            
+            #form__wrapper {
+                padding: 15px;
+                justify-content: center;
+                display: flex;
+            }
+            .calculator__form {
+                max-width: 560px;
+                width: 100%;
+            }
+            input {
+                margin-bottom: 0.8rem;
+            }
+            .calc__table {
+                width: 100%;
+            }
+            th,
+            td {
+                border: 1px solid #ced4da;
+                padding: 0.8rem;
+            }
+            label, .form-group {
+                margin-bottom: 0.5rem;
+            }
+            .form-control {
+                border: none;
+                outline: none;
+                border-radius: 0;
+                border-bottom: 2px solid #ced4da;
+            }
+            .form-control:focus {
+                box-shadow: 0px 2px 4px -4px #0d6efd;
+            }
+            .form-control.is-invalid:focus {
+                box-shadow: 0px 2px 4px -4px #dc3545;
+            }
+            input[type="number"]::-webkit-outer-spin-button,
+            input[type="number"]::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+            }
+            input[type="number"] {
+                -moz-appearance: textfield;
+            }
+            @media (max-width: 768px) {
+                html {
+                    font-size: 14px;
+                }
+                th,
+                td {
+                    padding: 0.5rem;
+                }
+            }
+        </style>
+    </body>
+</html>
