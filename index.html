@@ -173,6 +173,7 @@
             };
             const handleChange = () => {
                 const calculatorForm = document.querySelector(".calculator__form");
+                const startPosition = window.pageYOffset || window.scrollY;
                 const productPriceInput = document.getElementById("productPrice");
                 const avanceInput = document.getElementById("avance");
                 const productPrice = +productPriceInput.value;
@@ -189,7 +190,7 @@
                 if (productPrice && avance < productPrice) {
                     setTimeout(() => {
                         window.scrollTo({
-                            top: Math.round(calculatorForm.getBoundingClientRect().height),
+                            top: Math.round(calculatorForm.getBoundingClientRect().height) - startPosition,
                             left: 0,
                             behavior: "smooth",
                         });
