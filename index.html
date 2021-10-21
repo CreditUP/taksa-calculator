@@ -17,32 +17,40 @@
         <div class="wrapper">
             <div id="form__wrapper">
                 <div name="calcForm" class="calculator__form">
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label for="productPrice">Цена товара</label>
-                            <input type="number" placeholder="5000" class="form-control" id="productPrice" />
+                    <div class="calculator__form">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="productPrice">Цена товара</label>
+                                <input type="number" placeholder="5000" class="form-control" id="productPrice" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="avance">Аванс (предоплата)</label>
+                                <input type="number" placeholder="1000" class="form-control" id="avance" />
+                            </div>
+                            <p>Вы можете внести часть суммы товара в поле аванса. Тогда сумма за кредит будет меньше.</p>
+                            <div class="form-group">
+                                <p class="mb-2">Срок кредита: <span class="range__label">1 месяц</span></p>
+                                <input type="range" min="1" max="12" value="1" class="form-range" id="creditTerm" />
+                            </div>
+                            <div>
+                                <p>Процентная ставка в день: <span id="percentRate">0.5%</span></p>
+                            </div>
                         </div>
-                        <div class="form-group col-sm-6">
-                            <label for="avance">Аванс (предоплата)</label>
-                            <input type="number" placeholder="1000" class="form-control" id="avance" />
+                        <div class="mt-3 d-flex justify-content-center">
+                            <button type="button" class="btn calculate-btn" onClick="handleChange()">Рассчитать</button>
                         </div>
-                        <p>Вы можете внести часть суммы товара в поле аванса. Тогда сумма за кредит будет меньше.</p>
-                        <div class="form-group">
-                            <p class=" mb-2">Срок кредита: <span class="range__label">1 месяц</span></p>
-                            <input type="range" min="1" max="12" value="1" class="form-range" id="creditTerm" />
-                        </div>
-                        <div>
-                            <p>Процентная ставка в день: <span id="percentRate">0.5%</span></p>
-                        </div>
-                    </div>
-                    <div class="mt-3 d-flex justify-content-center">
-                        <button type="button" class="btn calculate-btn" onClick="handleChange()">Рассчитать</button>
                     </div>
                     <div style="display: none" id="hider">
-                        <h1  class="mt-4 mb-3">Результат</h1>
+                        <h1 class="mt-4 mb-3">Результат</h1>
                         <div class="form-group"></div>
                         <label for="inputPrice">Сумма кредита</label>
-                        <input type="number" class="form-control mb-3" id="result_summa_kredita" disabled style="border: none;" />
+                        <input
+                            type="number"
+                            class="form-control mb-3"
+                            id="result_summa_kredita"
+                            disabled
+                            style="border: none"
+                        />
                         <label class="form-label">График платежей</label>
                         <div style="overflow-x: auto">
                             <table class="calc__table">
@@ -68,7 +76,7 @@
             const getTable = (num, month, monthly_pay) => {
                 const tableBody = document.getElementById("table-body");
                 const totalPrice = num;
-                const percent = 0.5
+                const percent = 0.5;
 
                 const nowDate = new Date();
                 const datesOfPayment = [];
@@ -162,9 +170,16 @@
                 tableBody.appendChild(tableRow);
             };
             const handleChange = () => {
+                const calculatorForm = document.querySelector(".calculator__form");
                 const productPriceInput = document.getElementById("productPrice");
                 const avanceInput = document.getElementById("avance");
-
+                setTimeout(() => {
+                    window.scrollTo({
+                    top: Math.round(calculatorForm.getBoundingClientRect().height),
+                    left: 0,
+                    behavior: 'smooth'
+                })
+                }, 5);
                 const productPrice = +productPriceInput.value;
                 const avance = +avanceInput.value;
                 const creditTerm = +document.getElementById("creditTerm").value;
@@ -181,19 +196,15 @@
                     const summa_kreditovaniya = productPrice - avance;
                     const creditSumInput = document.getElementById("result_summa_kredita");
                     creditSumInput.value = summa_kreditovaniya;
-                    getTable(
-                        summa_kreditovaniya,
-                        creditTerm,
-                        Math.round(creditSumInput.value / creditTerm)
-                    );
+                    getTable(summa_kreditovaniya, creditTerm, Math.round(creditSumInput.value / creditTerm));
                 }
             };
             const rangeHandler = () => {
                 const range = document.getElementById("creditTerm");
                 const label = document.querySelector(".range__label");
-                const getMonthText = (val) => val < 2 ? "месяц" : val > 1 && val < 5 ? "месяцa" : "месяцев"
+                const getMonthText = (val) => (val < 2 ? "месяц" : val > 1 && val < 5 ? "месяцa" : "месяцев");
 
-                range.oninput = () => label.innerHTML = `${range.value} ${getMonthText(range.value)}`;
+                range.oninput = () => (label.innerHTML = `${range.value} ${getMonthText(range.value)}`);
             };
             rangeHandler();
         </script>
@@ -227,7 +238,7 @@
                 box-shadow: none;
                 color: #fff;
             }
-            
+
             #form__wrapper {
                 padding: 15px;
                 justify-content: center;
@@ -248,7 +259,8 @@
                 border: 1px solid #ced4da;
                 padding: 0.8rem;
             }
-            label, .form-group {
+            label,
+            .form-group {
                 margin-bottom: 0.5rem;
             }
             .form-control {
