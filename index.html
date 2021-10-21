@@ -27,7 +27,9 @@
                                 <label for="avance">Аванс (предоплата)</label>
                                 <input type="number" placeholder="1000" class="form-control" id="avance" />
                             </div>
-                            <p>Вы можете внести часть суммы товара в поле аванса. Тогда сумма за кредит будет меньше.</p>
+                            <p>
+                                Вы можете внести часть суммы товара в поле аванса. Тогда сумма за кредит будет меньше.
+                            </p>
                             <div class="form-group">
                                 <p class="mb-2">Срок кредита: <span class="range__label">1 месяц</span></p>
                                 <input type="range" min="1" max="12" value="1" class="form-range" id="creditTerm" />
@@ -173,13 +175,6 @@
                 const calculatorForm = document.querySelector(".calculator__form");
                 const productPriceInput = document.getElementById("productPrice");
                 const avanceInput = document.getElementById("avance");
-                setTimeout(() => {
-                    window.scrollTo({
-                    top: Math.round(calculatorForm.getBoundingClientRect().height),
-                    left: 0,
-                    behavior: 'smooth'
-                })
-                }, 5);
                 const productPrice = +productPriceInput.value;
                 const avance = +avanceInput.value;
                 const creditTerm = +document.getElementById("creditTerm").value;
@@ -192,6 +187,13 @@
                 if (avance > productPrice) valitateInput(avanceInput);
 
                 if (productPrice && avance < productPrice) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: Math.round(calculatorForm.getBoundingClientRect().height),
+                            left: 0,
+                            behavior: "smooth",
+                        });
+                    }, 5);
                     document.getElementById("hider").style.display = "block";
                     const summa_kreditovaniya = productPrice - avance;
                     const creditSumInput = document.getElementById("result_summa_kredita");
