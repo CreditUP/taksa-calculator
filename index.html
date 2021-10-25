@@ -13,203 +13,67 @@
             crossorigin="anonymous"
         />
     </head>
-    <body style="background: #fff">
-        <div class="wrapper">
-            <div id="form__wrapper">
-                <div name="calcForm" class="calculator__form">
-                    <div class="calculator__form">
-                        <div class="row">
-                            <div class="form-group col-sm-6">
-                                <label for="productPrice">Цена товара</label>
-                                <input type="number" placeholder="5000" class="form-control" id="productPrice" />
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label for="avance">Аванс (предоплата)</label>
-                                <input type="number" placeholder="1000" class="form-control" id="avance" />
-                            </div>
-                            <p>
-                                Вы можете внести часть суммы товара в поле аванса. Тогда сумма за кредит будет меньше.
-                            </p>
-                            <div class="form-group">
-                                <p class="mb-2">Срок кредита: <span class="range__label">1 месяц</span></p>
-                                <input type="range" min="1" max="12" value="1" class="form-range" id="creditTerm" />
-                            </div>
-                            <div>
-                                <p>Процентная ставка в день: <span id="percentRate">0.5%</span></p>
-                            </div>
+    <body>
+        <div class="wrapper d-flex justify-content-center">
+            <div class="form__wrapper">
+                    <div class="form-group row mb-3">
+                        <div class="col-4">
+                            <input type="number" placeholder="5000" class="form-control" id="productPrice" />
                         </div>
-                        <div class="mt-3 d-flex justify-content-center">
-                            <button type="button" class="btn calculate-btn" onClick="handleChange()">Рассчитать</button>
-                        </div>
+                        <label for="productPrice" class="col-8">Введите сумму кредита</label>
                     </div>
-                    <div style="display: none" id="hider">
-                        <h1 class="mt-4 mb-3">Результат</h1>
-                        <div class="form-group"></div>
-                        <label for="inputPrice">Сумма кредита</label>
-                        <input
-                            type="number"
-                            class="form-control mb-3"
-                            id="result_summa_kredita"
-                            disabled
-                            style="border: none"
-                        />
-                        <label class="form-label">График платежей</label>
-                        <div style="overflow-x: auto">
-                            <table class="calc__table">
-                                <thead>
-                                    <th>№ Период</th>
-                                    <th>Дата</th>
-                                    <th>Дни</th>
-                                    <th>Сумма</th>
-                                    <th>Тело</th>
-                                    <th>Проценты</th>
-                                </thead>
-                                <tbody id="table-body"></tbody>
-                            </table>
+                    <div class="form__box d-flex justify-content-between align-items-center p-3 mb-3">
+                        <div class="d-flex align-items-center credit__title">
+                            <img class="credit__logo me-3" src="./img/credit-up-logo.png" alt="CreditUp">
+                            <h4 class="m-0">CreditUp</h4>
                         </div>
+                        <div class="credit__price p-1">
+                            <span id="creditUp__price"></span>
+                        </div>
+                        <a class="btn btn-primary" href="https://creditup.com.ua/">Выбрать</a>
                     </div>
-                </div>
+                    <div class="form__box d-flex justify-content-between align-items-center p-3 mb-3">
+                        <div class="d-flex align-items-center credit__title">
+                            <img class="credit__logo me-3" src="./img/best-credit-logo.png" alt="Best Credit">
+                            <h4 class="m-0">Best Credit</h4>
+                        </div>
+                        <div class="credit__price p-1">
+                            <span id="bestCredit__price"></span>
+                        </div>
+                        <a class="btn btn-primary" href="https://best-credit.com.ua/">Выбрать</a>
+                    </div>
+                    <div class="form__box d-flex justify-content-between align-items-center p-3 mb-3">
+                        <div class="d-flex align-items-center credit__title">
+                            <img class="credit__logo me-3" src="./img/pie-credit-logo.png" alt="Pie Credit">
+                            <h4 class="m-0">Pie Credit</h4>
+                        </div>
+                        <div class="credit__price p-1">
+                            <span id="pieCredit__price"></span>
+                        </div>
+                        <a class="btn btn-primary" href="https://pie-credit.com/">Выбрать</a>
+                    </div>
+                    
             </div>
         </div>
         <!-- JavaScript -->
         <script type="text/javascript">
-            const daysInMonth = (month, year) => new Date(year, month, 0).getDate();
+            const productPriceInput = document.getElementById('productPrice')
+            const creditUpPrice = document.getElementById('creditUp__price')
+            const bestCreditPrice = document.getElementById('bestCredit__price')
+            const pieCreditPrice = document.getElementById('pieCredit__price')
+            const creditPayment = [creditUpPrice, bestCreditPrice, pieCreditPrice]
+            const percentRate = 0.005
+            const daysInMonth = 30
 
-            const getTable = (num, month, monthly_pay) => {
-                const tableBody = document.getElementById("table-body");
-                const totalPrice = num;
-                const percent = 0.5;
-
-                const nowDate = new Date();
-                const datesOfPayment = [];
-                const diff = [];
-                const body = [];
-                const percentAmount = [];
-                let last = new Date(nowDate);
-                for (let i = 0; i < month; i++) {
-                    datesOfPayment.push(new Date(last));
-                    datesOfPayment[i].setDate(nowDate.getDate());
-                    datesOfPayment[i].setMonth(datesOfPayment[i].getMonth() + 1);
-                    diff.push(daysInMonth(datesOfPayment[i].getMonth(), datesOfPayment[i].getFullYear()));
-                    body.push(num);
-                    num -= monthly_pay;
-                    percentAmount.push((body[body.length - 1] * (diff[diff.length - 1] * percent)) / 100);
-                    last = new Date(datesOfPayment[i]);
+            productPriceInput.oninput = e => {
+                if(e.target.value.length){
+                    creditUpPrice.innerHTML = `<b>${Math.round((e.target.value * percentRate * daysInMonth) + (e.target.value / 4))}</b> грн/месяц`
+                    bestCreditPrice.innerHTML = `<b>${Math.round((e.target.value * percentRate * daysInMonth) + (e.target.value / 4))}</b> грн/месяц`
+                    pieCreditPrice.innerHTML = `<b>${Math.round(e.target.value / 4)}</b> грн/месяц`
+                } else {
+                    creditPayment.forEach(item => item.innerHTML = '')
                 }
-
-                tableBody.innerHTML = "";
-
-                for (let i = 0; i < month; i++) {
-                    const tableRow = document.createElement("tr");
-                    let listItem;
-                    listItem = document.createElement("td");
-                    listItem.classList.add("listItem");
-                    listItem.innerText = i + 1;
-                    tableRow.appendChild(listItem);
-
-                    listItem = document.createElement("td");
-                    listItem.classList.add("listItem");
-                    listItem.innerText = datesOfPayment[i].toLocaleDateString("en-UK").replace(/\//g, ".");
-                    tableRow.appendChild(listItem);
-
-                    listItem = document.createElement("td");
-                    listItem.classList.add("listItem");
-                    listItem.innerText = diff[i];
-                    tableRow.appendChild(listItem);
-
-                    listItem = document.createElement("td");
-                    listItem.classList.add("listItem");
-                    listItem.innerText = Math.round(monthly_pay + percentAmount[i]);
-                    tableRow.appendChild(listItem);
-
-                    listItem = document.createElement("td");
-                    listItem.classList.add("listItem");
-                    listItem.innerText = monthly_pay;
-                    tableRow.appendChild(listItem);
-
-                    listItem = document.createElement("td");
-                    listItem.classList.add("listItem");
-                    listItem.innerText = Math.round(percentAmount[i]);
-                    tableRow.appendChild(listItem);
-
-                    tableBody.appendChild(tableRow);
-                }
-                const reducer = (previousValue, currentValue) => previousValue + currentValue;
-
-                let tableRow = document.createElement("tr");
-                listItem = document.createElement("td");
-                listItem.classList.add("listItem");
-                listItem.innerText = "Всего";
-
-                tableRow.appendChild(listItem);
-                listItem = document.createElement("td");
-                listItem.classList.add("listItem");
-                listItem.innerText = "";
-
-                tableRow.appendChild(listItem);
-
-                listItem = document.createElement("td");
-
-                listItem.classList.add("listItem");
-                listItem.innerText = diff.reduce(reducer);
-                tableRow.appendChild(listItem);
-
-                listItem = document.createElement("td");
-                listItem.classList.add("listItem");
-                listItem.innerText = Math.round(totalPrice + percentAmount.reduce(reducer));
-                tableRow.appendChild(listItem);
-
-                listItem = document.createElement("td");
-                listItem.classList.add("listItem");
-                listItem.innerText = Math.round(totalPrice);
-                tableRow.appendChild(listItem);
-
-                listItem = document.createElement("td");
-                listItem.classList.add("listItem");
-                listItem.innerText = Math.round(percentAmount.reduce(reducer));
-                tableRow.appendChild(listItem);
-
-                tableBody.appendChild(tableRow);
-            };
-            const handleChange = () => {
-                const calculatorForm = document.querySelector(".calculator__form");
-                const startPosition = window.pageYOffset || window.scrollY;
-                const productPriceInput = document.getElementById("productPrice");
-                const avanceInput = document.getElementById("avance");
-                const productPrice = +productPriceInput.value;
-                const avance = +avanceInput.value;
-                const creditTerm = +document.getElementById("creditTerm").value;
-
-                const valitateInput = (input) => {
-                    input.classList.add("is-invalid");
-                    input.onfocus = () => input.classList.remove("is-invalid");
-                };
-                if (!productPrice) valitateInput(productPriceInput);
-                if (avance > productPrice) valitateInput(avanceInput);
-
-                if (productPrice && avance < productPrice) {
-                    setTimeout(() => {
-                        window.scrollTo({
-                            top: Math.round(calculatorForm.getBoundingClientRect().height) - startPosition,
-                            left: 0,
-                            behavior: "smooth",
-                        });
-                    }, 5);
-                    document.getElementById("hider").style.display = "block";
-                    const summa_kreditovaniya = productPrice - avance;
-                    const creditSumInput = document.getElementById("result_summa_kredita");
-                    creditSumInput.value = summa_kreditovaniya;
-                    getTable(summa_kreditovaniya, creditTerm, Math.round(creditSumInput.value / creditTerm));
-                }
-            };
-            const rangeHandler = () => {
-                const range = document.getElementById("creditTerm");
-                const label = document.querySelector(".range__label");
-                const getMonthText = (val) => (val < 2 ? "месяц" : val > 1 && val < 5 ? "месяцa" : "месяцев");
-
-                range.oninput = () => (label.innerHTML = `${range.value} ${getMonthText(range.value)}`);
-            };
-            rangeHandler();
+            }
         </script>
         <!-- CSS Styles -->
         <style>
@@ -217,54 +81,47 @@
                 font-size: 16px;
             }
             body {
+                background: #fff;
                 color: #1d1c7e;
             }
-            button.calculate-btn {
+            .form__wrapper {
+                width: 100%;
+                max-width: 600px;
+                padding: 15px;
+            }
+            .form__box {
+                border: 1px solid #ddd;
+            }
+            .credit__title {
+                width: 50%;
+                max-width: 160px;
+            }
+            .credit__logo {
+                width: 25px;
+                height: 25px;
+                object-fit: contain;
+            }
+            .btn {
                 background-color: #f22b0c;
                 border: 1px solid #f22b0c;
                 color: #fff;
                 box-shadow: none;
             }
-            button.calculate-btn:focus {
+            .btn:focus {
                 background-color: #ff2e0e;
                 border: 1px solid #ff2e0e;
                 box-shadow: none;
             }
-            button.calculate-btn:visited {
+            .btn:visited {
                 background-color: #ff2e0e;
                 border: 1px solid #ff2e0e;
                 box-shadow: none;
             }
-            button.calculate-btn:hover {
+            .btn:hover {
                 background-color: #ff2e0e;
                 border: 1px solid #ff2e0e;
                 box-shadow: none;
                 color: #fff;
-            }
-
-            #form__wrapper {
-                padding: 15px;
-                justify-content: center;
-                display: flex;
-            }
-            .calculator__form {
-                max-width: 560px;
-                width: 100%;
-            }
-            input {
-                margin-bottom: 0.8rem;
-            }
-            .calc__table {
-                width: 100%;
-            }
-            th,
-            td {
-                border: 1px solid #ced4da;
-                padding: 0.8rem;
-            }
-            label,
-            .form-group {
-                margin-bottom: 0.5rem;
             }
             .form-control {
                 border: none;
@@ -289,9 +146,9 @@
                 html {
                     font-size: 14px;
                 }
-                th,
-                td {
-                    padding: 0.5rem;
+                .credit__logo {
+                    width: 22px;
+                    height: 22px;
                 }
             }
         </style>
