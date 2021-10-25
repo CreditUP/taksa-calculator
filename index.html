@@ -70,7 +70,7 @@
                 if (e.target.value.length) {
                     creditUpPrice.innerHTML = `<b>${Math.round( e.target.value * 0.005 * 30 + e.target.value / 4)}</b> грн/месяц`;
                     bestCreditPrice.innerHTML = `<b>${Math.round(e.target.value * 0.005 * 30 + e.target.value / 4)}</b> грн/месяц`;
-                    pieCreditPrice.innerHTML = `<b>${Math.round(e.target.value * 0.001 * 14 + e.target.value / 4)}</b> грн/месяц`;
+                    pieCreditPrice.innerHTML = `<b>${Math.round(e.target.value * 0.001 * 14 + e.target.value / 4)}</b> грн/45 днів`;
                 } else {
                     creditPayment.forEach((item) => (item.innerHTML = ""));
                 }
