@@ -68,7 +68,7 @@
                 if(!e.target.value)  e.target.value = ''
                 if(e.target.value.length >= 7) e.target.value = e.target.value.slice(0, 7)
                 if (e.target.value.length) {
-                    creditUpPrice.innerHTML = `<b>${Math.round( e.target.value * 0.005 * 30 + e.target.value / 4)}</b> грн/месяц`;
+                    creditUpPrice.innerHTML = `<b>${Math.round((e.target.value * 0.005 * 30 + e.target.value / 4) * 0.995)}</b> грн/месяц`;
                     bestCreditPrice.innerHTML = `<b>${Math.round(e.target.value * 0.005 * 30 + e.target.value / 4)}</b> грн/месяц`;
                     pieCreditPrice.innerHTML = `<b>${Math.round(e.target.value * 0.001 * 14 + e.target.value / 4)}</b> грн/45 днів`;
                 } else {
