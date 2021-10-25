@@ -16,64 +16,69 @@
     <body>
         <div class="wrapper d-flex justify-content-center">
             <div class="form__wrapper">
-                    <div class="form-group row mb-3">
-                        <div class="col-4">
-                            <input type="number" placeholder="5000" class="form-control" id="productPrice" />
-                        </div>
-                        <label for="productPrice" class="col-8">Введите сумму кредита</label>
+                <div class="form-group row mb-3">
+                    <div class="col-4">
+                        <input type="number" placeholder="5000" class="form-control" id="productPrice" />
                     </div>
-                    <div class="form__box d-flex justify-content-between align-items-center p-3 mb-3">
-                        <div class="d-flex align-items-center credit__title">
-                            <img class="credit__logo me-3" src="./img/credit-up-logo.png" alt="CreditUp">
-                            <h4 class="m-0">CreditUp</h4>
-                        </div>
-                        <div class="credit__price p-1">
-                            <span id="creditUp__price"></span>
-                        </div>
-                        <a class="btn btn-primary" href="https://creditup.com.ua/">Выбрать</a>
+                    <label for="productPrice" class="col-8">Введите сумму кредита (срок кредита 4 месяца)</label>
+                </div>
+                <div class="form__box d-flex justify-content-between align-items-center p-3 mb-3">
+                    <div class="d-flex align-items-center credit__title">
+                        <img class="credit__logo me-3" src="./img/credit-up-logo.png" alt="CreditUp" />
+                        <h4 class="m-0">CreditUp</h4>
                     </div>
-                    <div class="form__box d-flex justify-content-between align-items-center p-3 mb-3">
-                        <div class="d-flex align-items-center credit__title">
-                            <img class="credit__logo me-3" src="./img/best-credit-logo.png" alt="Best Credit">
-                            <h4 class="m-0">Best Credit</h4>
-                        </div>
-                        <div class="credit__price p-1">
-                            <span id="bestCredit__price"></span>
-                        </div>
-                        <a class="btn btn-primary" href="https://best-credit.com.ua/">Выбрать</a>
+                    <div class="credit__price p-1">
+                        <span id="creditUp__price"></span>
                     </div>
-                    <div class="form__box d-flex justify-content-between align-items-center p-3 mb-3">
-                        <div class="d-flex align-items-center credit__title">
-                            <img class="credit__logo me-3" src="./img/pie-credit-logo.png" alt="Pie Credit">
-                            <h4 class="m-0">Pie Credit</h4>
-                        </div>
-                        <div class="credit__price p-1">
-                            <span id="pieCredit__price"></span>
-                        </div>
-                        <a class="btn btn-primary" href="https://pie-credit.com/">Выбрать</a>
+                    <a class="btn btn-primary" target="blank" href="https://creditup.com.ua/">Выбрать</a>
+                </div>
+                <div class="form__box d-flex justify-content-between align-items-center p-3 mb-3">
+                    <div class="d-flex align-items-center credit__title">
+                        <img class="credit__logo me-3" src="./img/best-credit-logo.png" alt="Best Credit" />
+                        <h4 class="m-0">Best Credit</h4>
                     </div>
-                    
+                    <div class="credit__price p-1">
+                        <span id="bestCredit__price"></span>
+                    </div>
+                    <a class="btn btn-primary" target="blank" href="https://best-credit.com.ua/">Выбрать</a>
+                </div>
+                <div class="form__box d-flex justify-content-between align-items-center p-3 mb-3">
+                    <div class="d-flex align-items-center credit__title">
+                        <img class="credit__logo me-3" src="./img/pie-credit-logo.png" alt="Pie Credit" />
+                        <h4 class="m-0">Pie Credit</h4>
+                    </div>
+                    <div class="credit__price p-1">
+                        <span id="pieCredit__price"></span>
+                    </div>
+                    <a class="btn btn-primary" target="blank" href="https://pie-credit.com/">Выбрать</a>
+                </div>
             </div>
         </div>
         <!-- JavaScript -->
         <script type="text/javascript">
-            const productPriceInput = document.getElementById('productPrice')
-            const creditUpPrice = document.getElementById('creditUp__price')
-            const bestCreditPrice = document.getElementById('bestCredit__price')
-            const pieCreditPrice = document.getElementById('pieCredit__price')
-            const creditPayment = [creditUpPrice, bestCreditPrice, pieCreditPrice]
-            const percentRate = 0.005
-            const daysInMonth = 30
+            const productPriceInput = document.getElementById("productPrice");
+            const creditUpPrice = document.getElementById("creditUp__price");
+            const bestCreditPrice = document.getElementById("bestCredit__price");
+            const pieCreditPrice = document.getElementById("pieCredit__price");
+            const creditPayment = [creditUpPrice, bestCreditPrice, pieCreditPrice];
+            const percentRate = 0.005;
+            const daysInMonth = 30;
 
-            productPriceInput.oninput = e => {
-                if(e.target.value.length){
-                    creditUpPrice.innerHTML = `<b>${Math.round((e.target.value * percentRate * daysInMonth) + (e.target.value / 4))}</b> грн/месяц`
-                    bestCreditPrice.innerHTML = `<b>${Math.round((e.target.value * percentRate * daysInMonth) + (e.target.value / 4))}</b> грн/месяц`
-                    pieCreditPrice.innerHTML = `<b>${Math.round(e.target.value / 4)}</b> грн/месяц`
+            productPriceInput.oninput = (e) => {
+                if(!e.target.value)  e.target.value = ''
+                if(e.target.value.length >= 7) e.target.value = e.target.value.slice(0, 7)
+                if (e.target.value.length) {
+                    creditUpPrice.innerHTML = `<b>${Math.round(
+                        e.target.value * percentRate * daysInMonth + e.target.value / 4
+                    )}</b> грн/месяц`;
+                    bestCreditPrice.innerHTML = `<b>${Math.round(
+                        e.target.value * percentRate * daysInMonth + e.target.value / 4
+                    )}</b> грн/месяц`;
+                    pieCreditPrice.innerHTML = `<b>${Math.round(e.target.value / 4)}</b> грн/месяц`;
                 } else {
-                    creditPayment.forEach(item => item.innerHTML = '')
+                    creditPayment.forEach((item) => (item.innerHTML = ""));
                 }
-            }
+            };
         </script>
         <!-- CSS Styles -->
         <style>
@@ -84,6 +89,7 @@
                 background: #fff;
                 color: #1d1c7e;
             }
+
             .form__wrapper {
                 width: 100%;
                 max-width: 600px;
