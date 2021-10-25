@@ -62,19 +62,15 @@
             const pieCreditPrice = document.getElementById("pieCredit__price");
             const creditPayment = [creditUpPrice, bestCreditPrice, pieCreditPrice];
             const percentRate = 0.005;
-            const daysInMonth = 30;
+            //const daysInMonth = 30;
 
             productPriceInput.oninput = (e) => {
                 if(!e.target.value)  e.target.value = ''
                 if(e.target.value.length >= 7) e.target.value = e.target.value.slice(0, 7)
                 if (e.target.value.length) {
-                    creditUpPrice.innerHTML = `<b>${Math.round(
-                        e.target.value * percentRate * daysInMonth + e.target.value / 4
-                    )}</b> грн/месяц`;
-                    bestCreditPrice.innerHTML = `<b>${Math.round(
-                        e.target.value * percentRate * daysInMonth + e.target.value / 4
-                    )}</b> грн/месяц`;
-                    pieCreditPrice.innerHTML = `<b>${Math.round(e.target.value / 4)}</b> грн/месяц`;
+                    creditUpPrice.innerHTML = `<b>${Math.round( e.target.value * percentRate * 30 + e.target.value / 4)}</b> грн/месяц`;
+                    bestCreditPrice.innerHTML = `<b>${Math.round(e.target.value * percentRate * 30 + e.target.value / 4)}</b> грн/месяц`;
+                    pieCreditPrice.innerHTML = `<b>${Math.round(e.target.value * 0.001 * 14 + e.target.value / 4)}</b> грн/месяц`;
                 } else {
                     creditPayment.forEach((item) => (item.innerHTML = ""));
                 }
