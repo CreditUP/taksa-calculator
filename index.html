@@ -22,7 +22,7 @@
                     </div>
                     <label for="productPrice" class="col-8">Введите сумму рассрочки</label>
                 </div>
-                <div class="form__box d-flex justify-content-between align-items-center p-3 mb-3">
+               <!--  <div class="form__box d-flex justify-content-between align-items-center p-3 mb-3">
                     <div class="d-flex align-items-center credit__title">
                         <img class="credit__logo me-2 me-sm-3" src="./img/credit-up-logo.png" alt="CreditUp" />
                         <h4 class="m-0">CreditUp*</h4>
@@ -41,7 +41,7 @@
                         <span id="bestCredit__price"></span>
                     </div>
                     <a class="btn btn-primary" target="blank" href="https://best-credit.com.ua/">Выбрать</a>
-                </div>
+                </div> -->
                 <div class="form__box d-flex justify-content-between align-items-center p-3 mb-3">
                     <div class="d-flex align-items-center credit__title">
                         <img class="credit__logo me-2 me-sm-3" src="./img/pie-credit-logo.png" alt="Pie Credit" />
@@ -58,8 +58,8 @@
         <!-- JavaScript -->
         <script type="text/javascript">
             const productPriceInput = document.getElementById("productPrice");
-            const creditUpPrice = document.getElementById("creditUp__price");
-            const bestCreditPrice = document.getElementById("bestCredit__price");
+            //const creditUpPrice = document.getElementById("creditUp__price");
+            //const bestCreditPrice = document.getElementById("bestCredit__price");
             const pieCreditPrice = document.getElementById("pieCredit__price");
             const creditPayment = [creditUpPrice, bestCreditPrice, pieCreditPrice];
             //const percentRate = 0.005 || 0.001
@@ -69,15 +69,9 @@
                 if (!e.target.value) e.target.value = "";
                 if (e.target.value.length >= 7) e.target.value = e.target.value.slice(0, 7);
                 if (e.target.value.length) {
-                    creditUpPrice.innerHTML = `<b>${Math.round(
-                        (e.target.value * 0.005 * 30 + e.target.value / 4) * 0.995
-                    )}</b> грн/месяц`;
-                    bestCreditPrice.innerHTML = `<b>${Math.round(
-                        e.target.value * 0.005 * 30 + e.target.value / 4
-                    )}</b> грн/месяц`;
-                    pieCreditPrice.innerHTML = `<b>${Math.round(
-                        e.target.value * 0.001 * 14 + e.target.value / 4
-                    )}</b> грн/раз в 2 недели`;
+                    /* creditUpPrice.innerHTML = `<b>${Math.round((e.target.value * 0.005 * 30 + e.target.value / 4) * 0.995)}</b> грн/месяц`;
+                    bestCreditPrice.innerHTML = `<b>${Math.round(e.target.value * 0.005 * 30 + e.target.value / 4)}</b> грн/месяц`; */
+                    pieCreditPrice.innerHTML = `<b>${Math.round(e.target.value * 0.001 * 14 + e.target.value / 4)}</b> грн/раз в 2 недели`;
                 } else {
                     creditPayment.forEach((item) => (item.innerHTML = ""));
                 }
